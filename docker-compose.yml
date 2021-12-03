@@ -25,4 +25,5 @@ services:
       - /var/www/html/glpi/:/var/www/html/glpi
     environment:
       - TIMEZONE=Europe/Brussels
+      - FOLDER_WEB="/home/site/wwwroot"
     restart: always
