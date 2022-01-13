@@ -32,15 +32,10 @@ else
 	rm -Rf ${FOLDER_WEB}${TAR_GLPI}
 	chown -R www-data:www-data ${FOLDER_WEB}${FOLDER_GLPI}
 fi
-rm -Rf ${FOLDER_WEB}${FOLDER_GLPI}files
-ln -s /mnt/files/ ${FOLDER_WEB}${FOLDER_GLPI}
-echo "Start sshd"
-/usr/sbin/sshd
-service ssh start
-echo "<?php class DB extends DBmysql {                public \$dbhost     = '$MARIAHOST';                public \$dbuser     = '$MARIAUSER';                 public \$dbpassword = '$MARIAPASSWORD';                 public \$dbdefault  = '$MARIADB';                }" > /var/www/html/glpi/config/config_db.php
-sed -i 's/GLPI_VAR_DIR \. "\/_sessions"/GLPI_ROOT \. "\/sessions"/g' /var/www/html/glpi/inc/based_config.php
-mkdir ${FOLDER_WEB}${FOLDER_GLPI}sessions
-chown -R www-data:www-data ${FOLDER_WEB}${FOLDER_GLPI}sessions
+
+echo "<?php class DB extends DBmysql {                public $dbhost     = $MARIAHOST;                public $dbuser     = $MARIAUSER;                 public $dbpassword = $MARIAPASSWORD;                 public $dbdefault  = $MARIADB;                }" > /var/www/html/glpi/config/config_db.php
+cp /opt/config.php ${FOLDER_WEB}${FOLDER_GLPI}config/config.php
+cp /opt/define.php ${FOLDER_WEB}${FOLDER_GLPI}config/define.php
 #Modification du vhost par défaut
 echo -e "<VirtualHost *:80>\n\tDocumentRoot /var/www/html/glpi\n\n\t<Directory /var/www/html/glpi>\n\t\tAllowOverride All\n\t\tOrder Allow,Deny\n\t\tAllow from all\n\t</Directory>\n\n\tErrorLog /var/log/apache2/error-glpi.log\n\tLogLevel warn\n\tCustomLog /var/log/apache2/access-glpi.log combined\n</VirtualHost>" > /etc/apache2/sites-available/000-default.conf
 
@@ -48,20 +43,9 @@ echo -e "<VirtualHost *:80>\n\tDocumentRoot /var/www/html/glpi\n\n\t<Directory /
 echo "*/2 * * * * www-data /usr/bin/php /var/www/html/glpi/front/cron.php &>/dev/null" >> /etc/cron.d/glpi
 #Start cron service
 service cron start
+
 #Activation du module rewrite d'apache
 a2enmod rewrite && service apache2 restart && service apache2 stop
 
 #Lancement du service apache au premier plan
 /usr/sbin/apache2ctl -D FOREGROUND
-
-
-
-
-
-    #   - TIMEZONE=Europe/Paris
-    #   - VERSION_GLPI=9.3.1
-    #   - WEBAPP_STORAGE_HOME=/home
-    #   - MARIADB=itsm
-    #   - MARIAHOST=maria-qa-gpm-glpi-new.mariadb.database.azure.com
-    #   - MARIAPASSWORD=b6cfe6b77a8be877e0c13f20e94cd!
-    #   - MARIAUSER=itsm@maria-qa-gpm-glpi-new
