@@ -1,0 +1,16 @@
+version: "3.2"
+
+services:
+
+#GLPI Container
+  prediction:
+    image: prediction:latest
+    container_name : prediction
+    hostname: prediction
+    ports:
+      - "80:80"
+    volumes:
+      - fsmount001:/mnt/data
+    environment:
+      - TIMEZONE=Europe/Paris
+    restart: always

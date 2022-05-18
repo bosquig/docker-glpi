@@ -1,0 +1,117 @@
+[
+    {
+      "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+      "value": "025f410e-170b-4f0f-9631-73f557fcc8e4",
+      "slotSetting": true
+    },
+    {
+      "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+      "value": "1.0.0",
+      "slotSetting": true
+    },
+    {
+      "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+      "value": "1.0.0",
+      "slotSetting": true
+    },
+    {
+      "name": "APPLICATIONINSIGHTS_CONFIGURATION_CONTENT",
+      "value": "",
+      "slotSetting": true
+    },
+    {
+      "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "value": "InstrumentationKey=025f410e-170b-4f0f-9631-73f557fcc8e4;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/",
+      "slotSetting": false
+    },
+    {
+      "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+      "value": "~3",
+      "slotSetting": true
+    },
+    {
+      "name": "DiagnosticServices_EXTENSION_VERSION",
+      "value": "~3",
+      "slotSetting": true
+    },
+    {
+      "name": "DOCKER_REGISTRY_SERVER_URL",
+      "value": "https://index.docker.io/v1",
+      "slotSetting": false
+    },
+    {
+      "name": "InstrumentationEngine_EXTENSION_VERSION",
+      "value": "disabled",
+      "slotSetting": true
+    },
+    {
+      "name": "MARIADB",
+      "value": "itsm",
+      "slotSetting": false
+    },
+    {
+      "name": "MARIAHOST",
+      "value": "maria-qa-gpm-glpi.mariadb.database.azure.com",
+      "slotSetting": false
+    },
+    {
+      "name": "MARIAPASSWORD",
+      "value": "b6cfe6b77a8be877e0c13f20e94cd!",
+      "slotSetting": false
+    },
+    {
+      "name": "MARIAUSER",
+      "value": "itsm@maria-qa-gpm-glpi",
+      "slotSetting": false
+    },
+    {
+      "name": "SnapshotDebugger_EXTENSION_VERSION",
+      "value": "disabled",
+      "slotSetting": true
+    },
+    {
+      "name": "TIMEZONE",
+      "value": "Europe/Paris",
+      "slotSetting": false
+    },
+    {
+      "name": "VERSION_GLPI",
+      "value": "9.3.1",
+      "slotSetting": false
+    },
+    {
+      "name": "WEBAPP_STORAGE_HOME",
+      "value": "/home",
+      "slotSetting": false
+    },
+    {
+      "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+      "value": "30",
+      "slotSetting": false
+    },
+    {
+      "name": "WEBSITE_PULL_IMAGE_OVER_VNET",
+      "value": "true",
+      "slotSetting": false
+    },
+    {
+      "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+      "value": "true",
+      "slotSetting": false
+    },
+    {
+      "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+      "value": "disabled",
+      "slotSetting": true
+    },
+    {
+      "name": "XDT_MicrosoftApplicationInsights_Mode",
+      "value": "recommended",
+      "slotSetting": true
+    },
+    {
+      "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
+      "value": "disabled",
+      "slotSetting": true
+    }
+  ]

@@ -30,17 +30,51 @@ else
 	wget -P ${FOLDER_WEB} ${SRC_GLPI}
 	tar -xzf ${FOLDER_WEB}${TAR_GLPI} -C ${FOLDER_WEB}
 	rm -Rf ${FOLDER_WEB}${TAR_GLPI}
+	if [[ "$VERSION_GLPI" < "9.5.0" ]]; then
+		echo "Inferieur a 9.5"
+		cp /opt/dbmysql.class.php ${FOLDER_WEB}${FOLDER_GLPI}inc
+	fi
 	chown -R www-data:www-data ${FOLDER_WEB}${FOLDER_GLPI}
 fi
 rm -Rf ${FOLDER_WEB}${FOLDER_GLPI}files
 ln -s /mnt/files/ ${FOLDER_WEB}${FOLDER_GLPI}
+cp -r /mnt/plugins/ ${FOLDER_WEB}${FOLDER_GLPI}
+chown -R www-data:www-data ${FOLDER_WEB}${FOLDER_GLPI}plugins
+chmod -R 777 ${FOLDER_WEB}${FOLDER_GLPI}plugins
+
+
+if [[ ! "$INSTALL" ]]; 
+	then
+	rm -Rf ${FOLDER_WEB}${FOLDER_GLPI}install
+fi
+
+
 echo "Start sshd"
 /usr/sbin/sshd
 service ssh start
-echo "<?php class DB extends DBmysql {                public \$dbhost     = '$MARIAHOST';                public \$dbuser     = '$MARIAUSER';                 public \$dbpassword = '$MARIAPASSWORD';                 public \$dbdefault  = '$MARIADB';                }" > /var/www/html/glpi/config/config_db.php
+if [[ "$DBSSL" == "True" ]]; then
+	echo "<?php class DB extends DBmysql {                public \$dbhost     = '$MARIAHOST';                public \$dbuser     = '$MARIAUSER';                 public \$dbpassword = '$MARIAPASSWORD';                 public \$dbdefault  = '$MARIADB';   public \$dbssl = true;    public \$dbsslca = '/etc/ssl/ca-cert.pem';             }" > /var/www/html/glpi/config/config_db.php
+else
+	echo "<?php class DB extends DBmysql {                public \$dbhost     = '$MARIAHOST';                public \$dbuser     = '$MARIAUSER';                 public \$dbpassword = '$MARIAPASSWORD';                 public \$dbdefault  = '$MARIADB';   public \$dbssl = false;              }" > /var/www/html/glpi/config/config_db.php
+fi
 sed -i 's/GLPI_VAR_DIR \. "\/_sessions"/GLPI_ROOT \. "\/sessions"/g' /var/www/html/glpi/inc/based_config.php
+sed -i 's/{GLPI_VAR_DIR}\/_sessions/{GLPI_ROOT}\/sessions/g' /var/www/html/glpi/inc/based_config.php
+
+
 mkdir ${FOLDER_WEB}${FOLDER_GLPI}sessions
 chown -R www-data:www-data ${FOLDER_WEB}${FOLDER_GLPI}sessions
+chmod 777 -R ${FOLDER_WEB}${FOLDER_GLPI}sessions
+cp /opt/.htaccess ${FOLDER_WEB}${FOLDER_GLPI}files/.htaccess
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_cache
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_cron
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_dumps
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_graphs
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_lock
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_pictures
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_plugins
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_rss
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_tmp
+mkdir -p ${FOLDER_WEB}${FOLDER_GLPI}files/_uploads
 #Modification du vhost par défaut
 echo -e "<VirtualHost *:80>\n\tDocumentRoot /var/www/html/glpi\n\n\t<Directory /var/www/html/glpi>\n\t\tAllowOverride All\n\t\tOrder Allow,Deny\n\t\tAllow from all\n\t</Directory>\n\n\tErrorLog /var/log/apache2/error-glpi.log\n\tLogLevel warn\n\tCustomLog /var/log/apache2/access-glpi.log combined\n</VirtualHost>" > /etc/apache2/sites-available/000-default.conf
 
@@ -53,15 +87,3 @@ a2enmod rewrite && service apache2 restart && service apache2 stop
 
 #Lancement du service apache au premier plan
 /usr/sbin/apache2ctl -D FOREGROUND
-
-
-
-
-
-    #   - TIMEZONE=Europe/Paris
-    #   - VERSION_GLPI=9.3.1
-    #   - WEBAPP_STORAGE_HOME=/home
-    #   - MARIADB=itsm
-    #   - MARIAHOST=maria-qa-gpm-glpi-new.mariadb.database.azure.com
-    #   - MARIAPASSWORD=b6cfe6b77a8be877e0c13f20e94cd!
-    #   - MARIAUSER=itsm@maria-qa-gpm-glpi-new

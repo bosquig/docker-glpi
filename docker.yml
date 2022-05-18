@@ -1,0 +1,23 @@
+version: "3.2"
+
+services:
+#GLPI Container
+  glpi:
+    image: bosquig/glpi:v1.31
+    container_name : glpi
+    hostname: glpi
+    ports:
+      - "80:80"
+    volumes:
+      - fsmount001:/mnt/files
+      - fsmount002:/mnt/plugins
+    environment:
+      - TIMEZONE=Europe/Paris
+      - VERSION_GLPI=9.3.1
+      - WEBAPP_STORAGE_HOME=/home/
+      - MARIADB=itsm
+      - MARIAHOST=maria-prod-gpm-glpi.mariadb.database.azure.com
+      - MARIAPASSWORD=b6cfe6b77a8be877e0c13f20e94cd!
+      - MARIAUSER=itsm@maria-prod-gpm-glpi
+      - TEST=test
+    restart: always
