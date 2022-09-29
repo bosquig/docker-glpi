@@ -60,6 +60,9 @@ fi
 sed -i 's/GLPI_VAR_DIR \. "\/_sessions"/GLPI_ROOT \. "\/sessions"/g' /var/www/html/glpi/inc/based_config.php
 sed -i 's/{GLPI_VAR_DIR}\/_sessions/{GLPI_ROOT}\/sessions/g' /var/www/html/glpi/inc/based_config.php
 
+if [[ "$OBSTART" == "True" ]]; then
+	sed -i 's/readfile($file)/ob_start();\n readfile($file)/g' /var/www/html/glpi/inc/toolbox.class.php
+fi
 
 mkdir ${FOLDER_WEB}${FOLDER_GLPI}sessions
 chown -R www-data:www-data ${FOLDER_WEB}${FOLDER_GLPI}sessions
@@ -83,7 +86,7 @@ echo "*/2 * * * * www-data /usr/bin/php /var/www/html/glpi/front/cron.php &>/dev
 #Start cron service
 service cron start
 #Activation du module rewrite d'apache
+/usr/bin/php7.4 /var/www/html/glpi/bin/console glpi:security:change_key --no-interaction > /opt/glpichangekey.txt
 a2enmod rewrite && service apache2 restart && service apache2 stop
-
 #Lancement du service apache au premier plan
 /usr/sbin/apache2ctl -D FOREGROUND
