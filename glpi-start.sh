@@ -88,7 +88,18 @@ echo "*/2 * * * * www-data /usr/bin/php7.4 /var/www/html/glpi/front/cron.php &>/
 #Start cron service
 service cron start
 #Activation du module rewrite d'apache
-/usr/bin/php7.4 /var/www/html/glpi/bin/console glpi:security:change_key --no-interaction > /opt/glpichangekey.txt
+if test -f "/mnt/plugins/glpicrypt.key"; then
+    echo "glpicrypt exists."
+	cp -f /mnt/plugins/glpicrypt.key ${FOLDER_WEB}${FOLDER_GLPI}config/glpicrypt.key
+	chown -R www-data:www-data ${FOLDER_WEB}${FOLDER_GLPI}config/glpicrypt.key
+	chmod 777 ${FOLDER_WEB}${FOLDER_GLPI}config/glpicrypt.key
+	rm ${FOLDER_WEB}${FOLDER_GLPI}plugins/glpicrypt.key
+else
+	echo "glpicrypt does not exist."
+	/usr/bin/php7.4 ${FOLDER_WEB}${FOLDER_GLPI}bin/console glpi:security:change_key --no-interaction > /opt/glpichangekey.txt
+	sleep 1
+	cp ${FOLDER_WEB}${FOLDER_GLPI}config/glpicrypt.key /mnt/plugins/glpicrypt.key
+fi
 a2enmod rewrite && service apache2 restart && service apache2 stop
 #Lancement du service apache au premier plan
 /usr/sbin/apache2ctl -D FOREGROUND
